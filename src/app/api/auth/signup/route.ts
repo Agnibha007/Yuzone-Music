@@ -115,10 +115,10 @@ export async function POST(request: NextRequest) {
         console.error("Signup error:", error);
         const message = error instanceof Error && error.message ? error.message : "Failed to create account.";
         const safeMessage =
-            message === "SMTP configuration is missing"
+            message === "Email configuration is missing"
                 ? message
-                : message === "SMTP send failed"
-                    ? "Unable to send verification email. Please check SMTP settings."
+                : message === "Email send failed"
+                    ? "Unable to send verification email. Please check email settings."
                     : "Failed to create account.";
         return NextResponse.json(
             { success: false, error: safeMessage },

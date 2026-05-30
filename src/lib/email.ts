@@ -14,19 +14,17 @@ export async function sendVerificationEmail(
   name: string,
   code: string
 ) {
-  const host = process.env.SMTP_HOST;
-  const port = process.env.SMTP_PORT
-    ? Number(process.env.SMTP_PORT)
-    : undefined;
-  const user = process.env.SMTP_USER;
+  const host = process.env.SMTP_HOST || "smtp.gmail.com";
+  const port = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 465;
+  const user = process.env.SMTP_USER || "Yuzonestudios@gmail.com";
   const pass = process.env.SMTP_PASS;
 
-  const from = process.env.SMTP_FROM || "no-reply@yuzone.me";
+  const from = process.env.SMTP_FROM || "Yuzonestudios@gmail.com";
   const fromName = process.env.SMTP_FROM_NAME || "Yuzone Music";
   const fromHeader = `${fromName} <${from}>`;
 
   if (!host || !port || !user || !pass) {
-    throw new Error("SMTP configuration is missing");
+    throw new Error("Email configuration is missing");
   }
 
   const transporter = nodemailer.createTransport({
@@ -168,7 +166,7 @@ If you didn’t request this, you can safely ignore this email.
       `,
     });
   } catch (error) {
-    console.error("SMTP send error:", error);
-    throw new Error("SMTP send failed");
+    console.error("Email send error:", error);
+    throw new Error("Email send failed");
   }
 }

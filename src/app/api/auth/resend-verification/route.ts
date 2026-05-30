@@ -41,10 +41,10 @@ export async function POST(request: NextRequest) {
         console.error("Resend verification error:", error);
         const message = error instanceof Error && error.message ? error.message : "Failed to resend verification email.";
         const safeMessage =
-            message === "SMTP configuration is missing"
+            message === "Email configuration is missing"
                 ? message
-                : message === "SMTP send failed"
-                    ? "Unable to send verification email. Please check SMTP settings."
+                : message === "Email send failed"
+                    ? "Unable to send verification email. Please check email settings."
                     : "Failed to resend verification email.";
         return NextResponse.json(
             { success: false, error: safeMessage },
