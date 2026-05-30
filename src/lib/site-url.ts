@@ -21,8 +21,6 @@ function getConfiguredSiteUrls() {
     const envCandidates = [
         process.env.NEXT_PUBLIC_SITE_URLS,
         process.env.NEXT_PUBLIC_SITE_URL,
-        process.env.NEXTAUTH_URLS,
-        process.env.NEXTAUTH_URL,
     ];
 
     for (const candidate of envCandidates) {
