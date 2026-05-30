@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { resolveSiteUrl } from "@/lib/site-url";
 import PodcastPageClient from "./PodcastPageClient";
 
 interface PodcastPageProps {
     params: Promise<{ id: string }>;
 }
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const revalidate = 3600;
 export const dynamic = "force-dynamic";
@@ -13,6 +13,13 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: PodcastPageProps): Promise<Metadata> {
     const resolvedParams = await params;
     const id = typeof resolvedParams?.id === "string" ? resolvedParams.id.trim() : "";
+    const requestHeaders = await headers();
+    const requestOrigin = requestHeaders.get("origin") ?? (() => {
+        const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
+        const proto = requestHeaders.get("x-forwarded-proto") ?? "https";
+        return host ? `${proto}://${host}` : null;
+    })();
+    const siteUrl = resolveSiteUrl(requestOrigin);
     
     if (!id) {
         return {
@@ -57,6 +64,7 @@ export async function generateMetadata({ params }: PodcastPageProps): Promise<Me
 export default async function PodcastPage({ params }: PodcastPageProps) {
     const resolvedParams = await params;
     const id = typeof resolvedParams?.id === "string" ? resolvedParams.id.trim() : "";
+    const siteUrl = resolveSiteUrl();
 
     // Parse feedId and episodeId from the id parameter (format: feedId-episodeId)
     const parts = id.split("-");

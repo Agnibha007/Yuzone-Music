@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
+import { getRuntimeSiteUrl } from "@/lib/site-url";
 import styles from "./page.module.css";
 
 interface SongPlayerProps {
@@ -40,7 +41,7 @@ export default function SongPlayer({ song }: SongPlayerProps) {
 
     const emitSongUrl = useCallback(() => {
         if (typeof window === "undefined") return;
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+        const baseUrl = getRuntimeSiteUrl();
         const songUrl = new URL(`/song/${song.videoId}`, baseUrl).toString();
         (window as any).__yuzoneLastSongUrl = songUrl;
         window.dispatchEvent(

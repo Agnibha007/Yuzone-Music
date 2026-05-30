@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { usePlayerStore } from "@/store/playerStore";
 import { getPlaybackUrl } from "@/lib/playback";
+import { getRuntimeSiteUrl } from "@/lib/site-url";
 
 // Global audio element to ensure only one instance
 let globalAudioRef: HTMLAudioElement | null = null;
@@ -74,7 +75,7 @@ export function useAudioPlayer() {
             if (typeof window !== "undefined") {
                 const { currentSong } = usePlayerStore.getState();
                 if (currentSong?.videoId && currentSong.contentType !== "podcast") {
-                    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+                    const baseUrl = getRuntimeSiteUrl();
                     const songUrl = new URL(`/song/${currentSong.videoId}`, baseUrl).toString();
                     (window as any).__yuzoneLastSongUrl = songUrl;
                     window.dispatchEvent(

@@ -48,7 +48,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <ErrorBoundary>
             <ClientErrorReporter />
-            <SessionProvider>
+            <SessionProvider basePath="/api/auth">
                 <ThemeProvider>{children}</ThemeProvider>
             </SessionProvider>
         </ErrorBoundary>

@@ -7,6 +7,7 @@ import { Download, Play, Pause, Music } from "lucide-react";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { usePlayerStore } from "@/store/playerStore";
 import type { Song } from "@/types";
+import { getRuntimeSiteUrl } from "@/lib/site-url";
 import styles from "./share.module.css";
 
 interface SharedContent {
@@ -158,7 +159,7 @@ export default function SharePage() {
 
         const emitSongUrl = (videoId: string, title?: string, artist?: string) => {
             if (typeof window === "undefined") return;
-            const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+            const baseUrl = getRuntimeSiteUrl();
             const songUrl = new URL(`/song/${videoId}`, baseUrl).toString();
             (window as any).__yuzoneLastSongUrl = songUrl;
             window.dispatchEvent(
@@ -274,7 +275,7 @@ export default function SharePage() {
 
         const emitSongUrl = () => {
             if (typeof window === "undefined") return;
-            const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+            const baseUrl = getRuntimeSiteUrl();
             const songUrl = new URL(`/song/${song.videoId}`, baseUrl).toString();
             (window as any).__yuzoneLastSongUrl = songUrl;
             window.dispatchEvent(

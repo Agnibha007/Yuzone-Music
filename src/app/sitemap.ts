@@ -2,8 +2,9 @@ import type { MetadataRoute } from "next";
 import { getTopCharts } from "@/lib/youtube-music";
 import connectDB from "@/lib/mongodb";
 import SeoSong from "@/models/SeoSong";
+import { getPrimarySiteUrl } from "@/lib/site-url";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteUrl = getPrimarySiteUrl();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date();

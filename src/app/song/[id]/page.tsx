@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { getSongInfo } from "@/lib/youtube-music";
+import { resolveSiteUrl } from "@/lib/site-url";
 import SongPageClient from "./SongPageClient";
 
 interface SongPageProps {
     params: Promise<{ id: string }>;
 }
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const revalidate = 3600;
 export const dynamic = "force-dynamic";
@@ -27,6 +27,13 @@ function toIsoDuration(time: string) {
 export async function generateMetadata({ params }: SongPageProps): Promise<Metadata> {
     const resolvedParams = await params;
     const videoId = typeof resolvedParams?.id === "string" ? resolvedParams.id.trim() : "";
+    const requestHeaders = await headers();
+    const requestOrigin = requestHeaders.get("origin") ?? (() => {
+        const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
+        const proto = requestHeaders.get("x-forwarded-proto") ?? "https";
+        return host ? `${proto}://${host}` : null;
+    })();
+    const siteUrl = resolveSiteUrl(requestOrigin);
     if (!videoId) {
         return {
             title: "Song not found | Yuzone Music",
@@ -72,6 +79,7 @@ export async function generateMetadata({ params }: SongPageProps): Promise<Metad
 export default async function SongPage({ params }: SongPageProps) {
     const resolvedParams = await params;
     const videoId = typeof resolvedParams?.id === "string" ? resolvedParams.id.trim() : "";
+    const siteUrl = resolveSiteUrl();
 
     const song = videoId ? await getSongInfo(videoId) : null;
     const resolvedSong = song ?? {
