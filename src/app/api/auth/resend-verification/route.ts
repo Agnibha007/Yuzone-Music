@@ -41,14 +41,26 @@ export async function POST(request: NextRequest) {
         console.error("Resend verification error:", error);
         const message = error instanceof Error && error.message ? error.message : "Failed to resend verification email.";
         const safeMessage =
-            message === "Email configuration is missing"
-                ? message
-                : message === "Email send failed"
-                    ? "Unable to send verification email. Please check email settings."
-                    : "Failed to resend verification email.";
+            message.startsWith("Email configuration is missing")
+                ? `Unable to send verification email. Missing configuration: ${message.replace("Email configuration is missing: ", "")}`
+                : message === "Email authentication failed"
+                    ? "Unable to send verification email. The SMTP username or password is invalid."
+                    : message === "Email service unavailable"
+                        ? "Unable to send verification email. The SMTP service is unreachable right now."
+                        : message === "Email send failed"
+                            ? "Unable to send verification email. Please check email settings."
+                            : "Failed to resend verification email.";
+
+        const statusCode =
+            message.startsWith("Email configuration is missing") ||
+            message === "Email authentication failed" ||
+            message === "Email service unavailable"
+                ? 503
+                : 500;
+
         return NextResponse.json(
             { success: false, error: safeMessage },
-            { status: 500 }
+            { status: statusCode }
         );
     }
 }

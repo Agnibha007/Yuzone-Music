@@ -23,8 +23,26 @@ export async function sendVerificationEmail(
   const fromName = process.env.SMTP_FROM_NAME || "Yuzone Music";
   const fromHeader = `${fromName} <${from}>`;
 
-  if (!host || !port || !user || !pass) {
-    throw new Error("Email configuration is missing");
+  const missingConfig: string[] = [];
+
+  if (!host) {
+    missingConfig.push("SMTP_HOST");
+  }
+
+  if (!Number.isFinite(port) || port <= 0) {
+    missingConfig.push("SMTP_PORT");
+  }
+
+  if (!user) {
+    missingConfig.push("SMTP_USER");
+  }
+
+  if (!pass) {
+    missingConfig.push("SMTP_PASS");
+  }
+
+  if (missingConfig.length > 0) {
+    throw new Error(`Email configuration is missing: ${missingConfig.join(", ")}`);
   }
 
   const transporter = nodemailer.createTransport({
@@ -167,6 +185,16 @@ If you didn’t request this, you can safely ignore this email.
     });
   } catch (error) {
     console.error("Email send error:", error);
+    const message = error instanceof Error ? error.message : "Email send failed";
+
+    if (message.includes("Invalid login") || message.includes("EAUTH")) {
+      throw new Error("Email authentication failed");
+    }
+
+    if (message.includes("getaddrinfo") || message.includes("ECONN") || message.includes("ETIMEDOUT")) {
+      throw new Error("Email service unavailable");
+    }
+
     throw new Error("Email send failed");
   }
 }
