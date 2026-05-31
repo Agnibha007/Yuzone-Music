@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendApiUrl } from "@/lib/backend-url";
 
 /**
  * GET /api/album?browseId=MPREb_...
  * Returns album details and songs (flat JSON) matching the requested format
- * Proxies to external API: https://api.yuzone.me/album?browseId=
+ * Proxies to external API: https://yuzone-api.onrender.com/album?browseId=
  */
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Call external API
-    const externalApiUrl = `https://api.yuzone.me/album?browseId=${encodeURIComponent(browseId.trim())}`;
+    const externalApiUrl = `${getBackendApiUrl()}/album?browseId=${encodeURIComponent(browseId.trim())}`;
     const response = await fetch(externalApiUrl);
 
     if (!response.ok) {

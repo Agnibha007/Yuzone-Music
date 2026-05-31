@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { cache, CACHE_TTL } from "@/lib/cache";
 import { successResponse, errorResponse } from "@/lib/api-utils";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import type { AlbumDetailsResponse } from "@/types/api";
 
 export async function GET(
@@ -22,8 +23,7 @@ export async function GET(
         }
 
         // Fetch album details from external API
-        // Example: https://api.yuzone.me/album/{browseId}
-        const externalApiUrl = `https://api.yuzone.me/album/${encodeURIComponent(browseId)}`;
+        const externalApiUrl = `${getBackendApiUrl()}/album/${encodeURIComponent(browseId)}`;
 
         try {
             const response = await fetch(externalApiUrl);

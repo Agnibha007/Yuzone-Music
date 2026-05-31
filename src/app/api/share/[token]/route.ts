@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Share from "@/models/Share";
 import Playlist from "@/models/Playlist";
 import { getSongInfo } from "@/lib/youtube-music";
+import { getBackendApiUrl } from "@/lib/backend-url";
 
 // GET - Access shared content without authentication
 export async function GET(
@@ -76,7 +77,7 @@ export async function GET(
             let songData = null;
             try {
                 // Use external API to search for the song by videoId
-                const externalApiUrl = `https://api.yuzone.me/search?q=${encodeURIComponent(share.contentId)}`;
+                const externalApiUrl = `${getBackendApiUrl()}/search?q=${encodeURIComponent(share.contentId)}`;
                 const response = await fetch(externalApiUrl, {
                     headers: {
                         'User-Agent': 'YuzoneMusic/1.0'

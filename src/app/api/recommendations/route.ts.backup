@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import PlaybackHistory from "@/models/PlaybackHistory";
@@ -143,7 +144,7 @@ export async function GET(req: NextRequest) {
                 // Search for songs similar to liked ones
                 const searchQuery = `${liked.title} ${liked.artist}`.substring(0, 50);
                 const searchRes = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(searchQuery)}`
+                    `${getBackendApiUrl()}/search?q=${encodeURIComponent(searchQuery)}`
                 );
                 
                 if (searchRes.ok) {
@@ -185,7 +186,7 @@ export async function GET(req: NextRequest) {
             try {
                 const searchQuery = artist;
                 const searchRes = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(searchQuery)}`
+                    `${getBackendApiUrl()}/search?q=${encodeURIComponent(searchQuery)}`
                 );
                 
                 if (searchRes.ok) {
@@ -230,7 +231,7 @@ export async function GET(req: NextRequest) {
             try {
                 const searchQuery = `${song.artist}`.substring(0, 30); // Search by artist only for more variety
                 const searchRes = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(searchQuery)}`
+                    `${getBackendApiUrl()}/search?q=${encodeURIComponent(searchQuery)}`
                 );
                 
                 if (searchRes.ok) {

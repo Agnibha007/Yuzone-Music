@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProxyStream, getSongInfo } from "@/lib/youtube-music";
+import { getBackendApiUrl } from "@/lib/backend-url";
 
 export async function GET(request: NextRequest) {
     try {
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
 
         // Try External API First (as requested by user)
         try {
-            const externalApiUrl = "https://api.yuzone.me/download";
+            const externalApiUrl = `${getBackendApiUrl()}/download`;
 
             console.log(`[StreamAPI] Trying external API for videoId: ${videoId}`);
             const response = await fetch(externalApiUrl, {

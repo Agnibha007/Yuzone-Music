@@ -1,4 +1,5 @@
 import { cache, CACHE_TTL } from "@/lib/cache";
+import { getBackendApiUrl } from "@/lib/backend-url";
 
 export const runtime = "nodejs";
 
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
             });
         }
 
-        const response = await fetch("https://api.yuzone.me/lyrics", {
+        const response = await fetch(`${getBackendApiUrl()}/lyrics`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import { Innertube } from "youtubei.js";
 import { cache, CACHE_TTL } from "./cache";
+import { getBackendApiUrl } from "@/lib/backend-url";
 
 let innertube: Innertube | null = null;
 
@@ -459,8 +460,7 @@ export async function getSongInfo(videoId: string): Promise<YTMusicSong | null> 
 
 async function fetchSongInfoFromExternal(videoId: string): Promise<YTMusicSong | null> {
     try {
-        // Try external API directly (api.yuzone.me)
-        const externalApiUrl = `https://api.yuzone.me/search?q=${encodeURIComponent(videoId)}`;
+        const externalApiUrl = `${getBackendApiUrl()}/search?q=${encodeURIComponent(videoId)}`;
         console.log(`[fetchSongInfoFromExternal] Fetching from: ${externalApiUrl}`);
         
         const response = await fetch(externalApiUrl, {

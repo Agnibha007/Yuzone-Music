@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { getProxyStream } from "@/lib/youtube-music";
 import { parseQuality, errorResponse } from "@/lib/api-utils";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import type { DownloadRequest } from "@/types/api";
 
 /**
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
         const title = `audio.${format}`;
 
         // Call external API for high-quality direct download
-        const externalApiUrl = "https://api.yuzone.me/download/direct";
+        const externalApiUrl = `${getBackendApiUrl()}/download/direct`;
 
         try {
             const response = await fetch(externalApiUrl, {
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Use quality 3 (high quality) for direct downloads
-        const externalApiUrl = "https://api.yuzone.me/download/direct";
+        const externalApiUrl = `${getBackendApiUrl()}/download/direct`;
 
         try {
             const response = await fetch(externalApiUrl, {

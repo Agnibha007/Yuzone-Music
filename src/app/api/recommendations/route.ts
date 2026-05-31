@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import PlaybackHistory from "@/models/PlaybackHistory";
@@ -20,6 +21,7 @@ interface ScoredSong {
 
 const COOKIE_KEY = "yuz_recommendations";
 const COOKIE_MAX_AGE = 60 * 60; // 1 hour in seconds
+const backendApiUrl = getBackendApiUrl();
 
 export async function GET(req: NextRequest) {
     try {
@@ -117,7 +119,7 @@ export async function GET(req: NextRequest) {
             try {
                 const topArtist = topArtists[0];
                 const artistSearch = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(topArtist)}&type=songs`
+                    `${backendApiUrl}/search?q=${encodeURIComponent(topArtist)}&type=songs`
                 );
                 if (artistSearch.ok) {
                     const searchData = await artistSearch.json();
@@ -188,7 +190,7 @@ export async function GET(req: NextRequest) {
                 // Search for songs similar to liked ones
                 const searchQuery = `${liked.title} ${liked.artist}`.substring(0, 50);
                 const searchRes = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(searchQuery)}&type=songs`
+                    `${backendApiUrl}/search?q=${encodeURIComponent(searchQuery)}&type=songs`
                 );
                 
                 if (searchRes.ok) {
@@ -232,7 +234,7 @@ export async function GET(req: NextRequest) {
             try {
                 const searchQuery = artist;
                 const searchRes = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(searchQuery)}&type=songs`
+                    `${backendApiUrl}/search?q=${encodeURIComponent(searchQuery)}&type=songs`
                 );
                 
                 if (searchRes.ok) {
@@ -282,7 +284,7 @@ export async function GET(req: NextRequest) {
             try {
                 const searchQuery = `${song.artist}`.substring(0, 30); // Search by artist only for more variety
                 const searchRes = await fetch(
-                    `https://api.yuzone.me/search?q=${encodeURIComponent(searchQuery)}&type=songs`
+                    `${backendApiUrl}/search?q=${encodeURIComponent(searchQuery)}&type=songs`
                 );
                 
                 if (searchRes.ok) {

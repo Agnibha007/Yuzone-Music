@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { cache, CACHE_TTL } from "@/lib/cache";
 import { successResponse, errorResponse, parseSearchType, formatDuration } from "@/lib/api-utils";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import connectDB from "@/lib/mongodb";
 import PodcastShow from "@/models/PodcastShow";
 import PodcastEpisode from "@/models/PodcastEpisode";
@@ -39,8 +40,7 @@ export async function GET(request: NextRequest) {
 
         if (includeMusic) {
             tasks.push((async () => {
-                // Use the user's external API with type parameter
-                const externalApiUrl = `https://api.yuzone.me/search?q=${encodeURIComponent(query)}&type=${type}`;
+                const externalApiUrl = `${getBackendApiUrl()}/search?q=${encodeURIComponent(query)}&type=${type}`;
 
                 // Add timeout for faster failure detection
                 const controller = new AbortController();

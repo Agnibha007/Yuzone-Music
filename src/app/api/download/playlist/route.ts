@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import { getServerSession } from "next-auth/next";
 
 export async function POST(request: NextRequest) {
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Forward request to external API
-        const response = await fetch("https://api.yuzone.me/download/playlist", {
+        const response = await fetch(`${getBackendApiUrl()}/download/playlist`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

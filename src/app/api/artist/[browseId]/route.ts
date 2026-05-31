@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { cache, CACHE_TTL } from "@/lib/cache";
 import { successResponse, errorResponse, formatDuration } from "@/lib/api-utils";
+import { getBackendApiUrl } from "@/lib/backend-url";
 import type { ArtistDetailsResponse } from "@/types/api";
 
 export async function GET(
@@ -25,9 +26,9 @@ export async function GET(
         // In production, you would call the external YouTube Music API or your backend service
         // that has artist details fetching capability
 
-        // Example: https://api.yuzone.me/artist/{browseId}
+        // Example: https://yuzone-api.onrender.com/artist/{browseId}
         // This endpoint would need to be implemented in your backend
-        const externalApiUrl = `https://api.yuzone.me/artist/${encodeURIComponent(browseId)}`;
+        const externalApiUrl = `${getBackendApiUrl()}/artist/${encodeURIComponent(browseId)}`;
 
         try {
             const response = await fetch(externalApiUrl);

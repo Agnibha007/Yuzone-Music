@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getBackendApiUrl } from "@/lib/backend-url";
 
 export async function POST(req: NextRequest) {
     try {
@@ -12,9 +13,10 @@ export async function POST(req: NextRequest) {
         }
 
         // Determine which external API to use
+        const backendApiUrl = getBackendApiUrl();
         const apiUrl = source === "spotify" 
-            ? "https://api.yuzone.me/spotifyPlaylist"
-            : "https://api.yuzone.me/youtubePlaylist";
+            ? `${backendApiUrl}/spotifyPlaylist`
+            : `${backendApiUrl}/youtubePlaylist`;
 
         // Proxy the request to the external API
         const response = await fetch(apiUrl, {
