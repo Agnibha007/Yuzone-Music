@@ -41,6 +41,11 @@ function LoginClient() {
 
         setIsSubmitting(false);
 
+        if (result?.error === "EMAIL_NOT_VERIFIED") {
+            setError("Please verify your email before signing in.");
+            return;
+        }
+
         if (result?.error) {
             setError("Invalid email or password.");
             return;

@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 if (user.emailVerified === false) {
-                    return null;
+                    throw new Error("EMAIL_NOT_VERIFIED");
                 }
 
                 const isValid = await bcrypt.compare(password, user.passwordHash);
